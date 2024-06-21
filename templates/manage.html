@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<!-- Form for updating the task -->
+<div class="container my-5 bg-light rounded p-3" style="max-width: 1000px; margin-top: 50px;">
+    <h4 class="card-label">UPDATE TASK</h4>
+    <div class="container card">
+        <form action="/manage/{{ todo.sno }}" method="POST">
+            <div class="mb-3">
+                <label for="title" class="form-label title-label">Title*</label>
+                <input type="text" name="title" class="form-control" id="title" maxlength="10" value="{{ todo.title }}" required="">
+            </div>
+            <div class="mb-3">
+                <label for="desc" class="form-label desc-label">Description</label>
+                <input type="text" name="desc" class="form-control" id="desc" maxlength="200" value="{{ todo.desc }}">
+            </div>
+            <button type="submit" class="btn update-button" id="submitButton">UPDATE</button>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript and Canvas -->
+<div id="background"></div>
+<div id="foreground"></div>
+<canvas id="particleCanvas"></canvas>
+
+<script src="/static/js/app.js"></script>
+<script src="/static/js/particles.js"></script>
+
+{% endblock body %}

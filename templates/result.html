@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<!-- Table to show all the available posts -->
+<div class="container my-5" style="max-width: 1000px;">
+    {% if not posts %}
+    <h4 class="result-label">NO TASKS FOUND</h4>
+    <div class="alert alert-secondary" role="alert">
+        No existing items.
+    </div>
+    {% else %}
+    <h4 class="result-label">TASKS FOUND</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">S.No.</th>
+                <th scope="col">Title</th>
+                <th scope="col">Actions</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ post.title }}</td>
+                <td>
+                    <a href="/manage/{{ post.sno }}" type="button"
+                        class="btn btn-outline-dark btn-sm mx-1 my-1">MANAGE</a>
+                    <a href="/delete/{{ post.sno }}" type="button"
+                        class="btn btn-outline-dark btn-sm mx-1 my-1">DELETE</a>
+                </td>
+                <td>
+                    {% if not post.completed %}
+                    <!-- Form for marking as completed -->
+                    <form id="completeForm{{ post.sno }}" action="/complete/{{ post.sno }}" method="POST">
+                        <button type="submit" class="btn btn-outline-dark btn-sm mx-1 my-1 mark-complete-btn" data-todo-sno="{{ post.sno }}">
+                            Mark as Completed
+                        </button>
+                    </form>
+                    {% else %}
+                    <!-- Form for marking as not completed -->
+                    <form id="completeForm{{ post.sno }}" action="/complete/{{ post.sno }}" method="POST">
+                        <button type="submit" class="btn btn-outline-dark btn-sm mx-1 my-1 completed" data-todo-sno="{{ post.sno }}">
+                            Completed
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+<canvas id="particleCanvas"></canvas>
+
+<script src="/static/js/app.js"></script>
+<script src="/static/js/particles.js"></script>
+
+{% endblock body %}

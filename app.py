@@ -215,6 +215,96 @@ def fetch_tasks():
 
     return jsonify(events)
 
+@app.route("/manage/<int:sno>", methods=["GET", "POST"])
+@login_required
+def manage_item(sno):
+    item = Todo.query.get_or_404(sno)
+    check_task_owner(item)
+
+    if request.method == "POST":
+        user_title = request.form["title"]
+        user_desc = request.form["desc"]
+
+        item.title = user_title
+        item.desc = user_desc
+        db.session.commit()
+
+        return redirect("/")
+
+    return render_template("manage.html", todo=item)
+
+@app.route('/delete/<int:sno>')
+@login_required
+def delete_item(sno):
+    item = Todo.query.get_or_404(sno)
+    check_task_owner(item)
+
+    db.session.delete(item)
+    db.session.commit()
+    return redirect('/')
+
+@app.route('/search', methods=["GET", "POST"])
+@login_required
+def search_item():
+    search_query = request.args.get('query')
+    if not search_query:
+        flash('Please provide a search query', 'error')
+        return redirect(url_for('home'))
+
+    user_id = current_user.id
+    result = Todo.query.filter(Todo.title == search_query, Todo.user_id == user_id).all()
+    if not result:
+        flash('No results found', 'info')
+
+    return render_template('result.html', posts=result)
+
+@app.route('/complete/<int:sno>', methods=["POST"])
+@login_required
+def complete_item(sno):
+    item = Todo.query.get_or_404(sno)
+
+    if item.user_id != current_user.id:
+        flash('You are not authorized to complete this task.', 'error')
+        return redirect(url_for('home'))
+
+    item.completed = not item.completed
+    db.session.commit()
+    return redirect('/')
+
+def is_admin():
+    user = current_user
+
+    if user.is_authenticated:
+        return user.username == 'admin'
+    return False
+
+@app.route('/admin/users')
+@login_required
+def admin_users():
+    if not is_admin():
+        flash('Access denied. Only administrators can access this page.', 'error')
+        return redirect(url_for('home'))
+
+    all_users = User.query.all()
+    return render_template('admin_users.html', users=all_users)
+
+@app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def admin_delete_user(user_id):
+    if not is_admin():
+        flash('Access denied. Only administrators can perform this action.', 'error')
+        return redirect(url_for('home'))
+
+    user_to_delete = User.query.get_or_404(user_id)
+
+    Todo.query.filter_by(user_id=user_to_delete.id).delete()
+
+    db.session.delete(user_to_delete)
+    db.session.commit()
+
+    flash('User and associated tasks have been successfully deleted.', 'success')
+    return redirect(url_for('admin_users'))
+
 @app.route('/profile')
 @login_required
 def profile():
