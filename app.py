@@ -14,6 +14,13 @@ app.config["SECRET_KEY"] = secrets.token_hex(16)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todo.sqlite"
 db = SQLAlchemy(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 class Todo(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(10), nullable=False)
@@ -29,7 +36,46 @@ class Todo(db.Model):
         return f"{self.sno} - {self.title}"
 
 class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
     tasks = db.relationship('Todo', backref='user', lazy=True)
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[validators.DataRequired()])
+    password = PasswordField('Password', validators=[validators.DataRequired()])
+    submit = SubmitField('Login')
+
+class SignupForm(FlaskForm):
+    username = StringField('Username', validators=[validators.DataRequired()])
+    email = StringField('Email', validators=[validators.DataRequired(), validators.Email()])
+    password = PasswordField('Password', validators=[
+        validators.DataRequired(),
+        validators.Length(min=8, message='Password must be at least 8 characters long'),
+        validators.EqualTo('confirm_password', message='Passwords must match')
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[validators.DataRequired()])
+    submit = SubmitField('Sign Up')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user);
+            session['user_id'] = user.id
+            flash('You have been logged in successfully', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password', 'error')
+    return render_template('login.html', form=form)
+
+def is_logged_in():
+    return 'user_id' in session
 
 def login_required(f):
     @wraps(f)
@@ -39,6 +85,45 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
+
+@app.context_processor
+def inject_logged_in():
+    return dict(is_logged_in=is_logged_in, is_admin=is_admin)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        username = bleach.clean(form.username.data.strip())
+        email = bleach.clean(form.email.data.strip())
+        password = form.password.data
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            flash('Username or email already exists. Please choose a different username or email.', 'error')
+            return redirect(url_for('signup'))
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long', 'error')
+            return redirect(url_for('signup'))
+        hashed_password = generate_password_hash(password)
+        new_user = User(username=username, email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        flash('Your account has been created! You are now logged in.', 'success')
+        return redirect(url_for('home'))
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out', 'info')
+    return redirect(url_for('login'))
+
+def check_task_owner(task):
+    if task.user_id != current_user.id:
+        flash('You are not authorized to perform this action on this task.', 'error')
+        return redirect(url_for('home'))
 
 @app.route('/', methods=["GET", "POST"])
 @login_required

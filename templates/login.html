@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/login.css')}}">
+
+<section>
+  <div class="form-box">
+    <div class="form-value">
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        <h2>Login</h2>
+        <div class="inputbox">
+          <ion-icon name="person-outline"></ion-icon>
+          {{ form.username(class="form-control", placeholder="Username", required=True) }}
+        </div>
+        <div class="inputbox">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          {{ form.password(class="form-control", placeholder="Password", required=True) }}
+        </div>
+        <button class="btn btn-dark">Log in</button>
+        <div class="register">
+          <p class="login-txt">Don't have an account? <a href="{{ url_for('signup') }}">Register</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<canvas id="particleCanvas"></canvas>
+
+<script src="/static/js/app.js"></script>
+<script src="/static/js/particles.js"></script>
+<script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+<script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+{% endblock body %}
