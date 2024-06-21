@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div id="external-events" class="col-md-3">
+            <h4 class="task-label">Tasks</h4>
+            <div id="task-list">
+                {% for task in all_todos %}
+                    <div class="{{ fc_event_class }}" data-task-id="{{ task.sno }}">
+                        <strong>{{ task.title }}</strong>
+                        <span class="badge badge-secondary">{{ 'Multi Day' if task.task_type == 'multi' else 'Single Day' }}</span>
+                        <!-- Icons for managing and deleting tasks -->
+                        <a href="/manage/{{ task.sno }}" type="button" class="btn icon" title="Manage Task">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                        <a href="/delete/{{ task.sno }}" type="button" class="btn icon" title="Delete Task">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                        <!-- Checkbox icon for task completion status -->
+                        <form id="completeForm{{ task.sno }}" action="/complete/{{ task.sno }}" method="POST" style="display:inline;">
+                            {% if not task.completed %}
+                                <button type="submit" class="btn icon" title="Mark as Completed">
+                                    <i class="far fa-square"></i>
+                                </button>
+                            {% else %}
+                                <button type="submit" class="btn icon" title="Mark as Not Completed">
+                                    <i class="fas fa-check-square"></i>
+                                </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="btn btn-primary mt-3" data-toggle="modal" data-target="#createTaskModal">Create Task</button>
+        </div>
+        <div id="calendar" class="col-md-9"></div>
+    </div>
+</div>
+
+<!-- Create Task Modal -->
+<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createTaskModalLabel">Create Task</h5>
+                <button type="button" class="close icon" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times icon"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Title*</label>
+                        <input type="text" id="taskTitle" name="title" class="form-control" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Description</label>
+                        <textarea id="taskDescription" name="desc" class="form-control" maxlength="200"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskType">Task Type</label>
+                        <select id="taskType" name="taskType" class="form-control" required>
+                            <option value="single">Single Day</option>
+                            <option value="multi">Multi Day</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn add-task">Add Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<canvas id="particleCanvas"></canvas>
+<script src="/static/js/calendar.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/particles.js"></script>
+
+{% endblock body %}

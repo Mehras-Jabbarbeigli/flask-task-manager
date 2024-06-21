@@ -1,0 +1,94 @@
+<!-- Profile Page -->
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container my-5 z" style="margin-top: 50px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="card-label">Profile Page</h2>
+            <div class="card">
+                <div class="card-body">
+                    <form id="delete-account-form" action="{{ url_for('delete_account') }}" method="POST">
+                        <div class="form-group mb-3">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" value="{{ username }}" readonly>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="all_tasks">All Tasks</label>
+                                    <input type="text" class="form-control" id="all_tasks" value="{{ all_tasks }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="completed_tasks">Completed Tasks</label>
+                                    <input type="text" class="form-control" id="completed_tasks" value="{{ completed_tasks }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="incomplete_tasks">Incomplete Tasks</label>
+                                    <input type="text" class="form-control" id="incomplete_tasks" value="{{ incomplete_tasks }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="password-input" style="display: none;">
+                            <div class="form-group mb-3">
+                                <label for="password">Enter Your Password to Confirm Account Deletion</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+                            <button type="button" id="show-password-input" class="btn btn-danger">Delete Account</button>
+                            <button type="submit" id="confirm-delete-account" class="btn btn-danger" style="display: none;">Confirm Deletion</button>
+                        </div>
+                    </form>
+                    <!-- Password change form -->
+                    <form id="change-password-form" action="{{ url_for('change_password') }}" method="POST" style="display: none;">
+                        <div class="form-group mb-3">
+                            <label for="current_password">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="new_password">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="confirm_new_password">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm_new_password" name="confirm_new_password" required>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-success">Change Password</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <button type="button" id="show-change-password-form" class="btn btn-primary">Change Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<canvas id="particleCanvas"></canvas>
+
+<script src="/static/js/app.js"></script>
+<script src="/static/js/particles.js"></script>
+
+<script>
+    document.getElementById('show-password-input').addEventListener('click', function() {
+        document.getElementById('password-input').style.display = 'block';
+        document.getElementById('show-password-input').style.display = 'none';
+        document.getElementById('confirm-delete-account').style.display = 'inline-block';
+    });
+
+    document.getElementById('show-change-password-form').addEventListener('click', function() {
+        document.getElementById('change-password-form').style.display = 'block';
+        document.getElementById('show-change-password-form').style.display = 'none';
+    });
+</script>
+
+{% endblock body %}

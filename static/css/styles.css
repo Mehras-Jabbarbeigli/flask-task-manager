@@ -1,0 +1,430 @@
+/*
+START of TASK LIST & TASK BLOCKS
+========================================================================================================================
+*/
+#external-events {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0.5;
+  padding: 10px;
+  height: 100%;
+  float: left;
+  text-align: center;
+  background-color: rgb(255 255 255 / 20%) !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 5px;
+}
+
+#external-events .fc-event {
+  margin: 10px 0;
+  cursor: pointer;
+  color: white;
+  background-color: rgba(0, 91, 53, 0.5) !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+}
+
+.task-label{
+  background-color: rgb(68, 119, 122) !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.fc-event.fc-event {
+  margin: 10px 0;
+  cursor: pointer;
+  color: white;
+  background-color: rgba(0, 91, 53, 0.5) !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+  border: black;
+}
+/*
+END of TASK LIST & TASK BLOCKS
+========================================================================================================================
+*/
+
+/*
+START of FORMS
+========================================================================================================================
+*/
+/*TASK CREATION FORM BACKGROUND*/
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .2);
+  outline: 0;
+  background-color: rgb(68, 119, 122) !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 5px;
+}
+
+/*FORMS*/
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: rgba(255, 255, 255, 0.5);
+  background-clip: padding-box;
+  border: 1px solid #ffffff21;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.2);
+  transition: box-shadow, transform 0.3s ease-in-out;
+  transform: scale(1.006);
+  will-change: transform; /* Hint to the browser that this property will change */
+}
+
+.form-label {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+label {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+/*
+END of FORMS
+========================================================================================================================
+*/
+
+/*
+START of TABLES
+========================================================================================================================
+*/
+.table {
+  color: black;
+  border-radius: 5px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.table th,
+.table td {
+  border-color: #000;
+  text-align: center;
+}
+
+.table th {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.table td {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.table a {
+  color: hsl(0deg 0% 0% / 80%);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5), 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease-in-out; /* Initial transition */
+}
+
+.table a:hover {
+  color: rgba(179, 255, 223, 0.9);
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+  will-change: transform; /* Hint to the browser that this property will change */
+}
+
+.mark-complete-btn {
+  color: #000;
+  background-color: #21252900;
+  border-color: #212529;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5), 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease-in-out; /* Initial transition */
+}
+
+.mark-complete-btn:hover {
+  color: rgba(179, 255, 223, 0.9);
+  background-color: #000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+  will-change: transform; /* Hint to the browser that this property will change */
+}
+
+.completed {
+  color: rgba(179, 255, 223, 0.9);
+  background-color: #000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5), 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease-in-out; /* Initial transition */
+}
+
+.completed:hover {
+  color: rgba(179, 255, 223, 0.9);
+  background-color: #000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+  will-change: transform; /* Hint to the browser that this property will change */
+}
+
+.alert-secondary {
+  color: #000000;
+  background-color: #e2e3e54d;
+  border-color: #e2e3e500;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.result-label{
+  background-color: #005b3524 !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  color: white;
+  text-align: center;
+}
+/*
+END of TABLES
+========================================================================================================================
+*/
+
+/*
+START of CARDS
+========================================================================================================================
+*/
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: rgb(255 255 255 / 20%) !important;  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 5px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.card-label{
+  background-color: #005b3524 !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  color: white;
+  text-align: center;
+}
+
+.btn-danger {
+  color: #000;
+  background-color: #dc354570;
+  border-color: #dc354500;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.update-button {
+  color: #ffffff;
+  background-color: #000000;
+  border-color: #212529;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-inline: 425px;
+}
+
+.update-button:hover {
+  color: aquamarine;
+  background-color: #000;
+}
+/*
+END of CARDS
+========================================================================================================================
+*/
+
+/*
+START of CALENDAR
+========================================================================================================================
+*/
+#calendar {
+  margin: 0 auto;
+  width: 70%;
+}
+
+/*CALENDAR TABLE*/
+.fc-view, .fc-view>table {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  background-color: rgb(255 255 255 / 20%)
+}
+
+/*TODAY CALENDAR HEADER*/
+.fc-today {
+  background: rgba(127, 255, 212, 0.2);
+}
+
+/*TODAY CALENDAR BOX*/
+.fc-unthemed td.fc-today {
+  background: rgba(0, 0, 0, 0.5);
+  color: aquamarine;
+}
+
+/*CALENDAR GRID LINES*/
+.fc-unthemed .fc-content, .fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view,
+.fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody,
+.fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
+  border-color: #000;
+}
+
+/*CALENDAR TOOLBAR TXT COLOR*/
+.fc-toolbar .fc-center {
+    display: inline-block;
+    color: white;
+}
+
+/*CALENDAR TOOLBAR BACKGROUND*/
+.fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1em;
+  background-color: #005b3524 !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+  padding: 5px;
+}
+
+/*
+START of CALENDAR BUTTONS
+------------------------------------------------------------------------------------------------------------------------
+*/
+
+.btn-primary {
+  color: white;
+  background-color: #21252900;
+  border-color: #212529;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.btn-primary:hover {
+  color: aquamarine;
+  background-color: #000;
+  border: black;
+}
+
+.add-task {
+  margin-top: 20px;
+  margin-inline: 185px;
+  color: #ffffff;
+  background-color: #000;
+  border: black;
+}
+
+.add-task:hover {
+  margin-top: 20px;
+  margin-inline: 185px;
+  color: aquamarine;
+  background-color: #000;
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+  will-change: transform;
+  border: black;
+}
+
+.fc-button {
+  color: white;
+  background-color: #21252900;
+  border-color: #212529;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.fc-button:hover {
+  color: aquamarine;
+  background-color: #000;
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+  will-change: transform;
+}
+
+.fc-state-default {
+  background: transparent;
+}
+
+.fc-button.fc-today-button {
+  margin-top: 5px;
+}
+
+.fc-button.fc-agendaWeek-button {
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+.fc-button.fc-agendaDay-button {
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+.fc-button.fc-month-button {
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+.fc-button.fc-prev-button {
+  margin-right: 2px;
+  margin-top: 5px;
+}
+
+.fc-button.fc-next-button {
+  margin-left: 2px;
+  margin-top: 5px;
+}
+
+.icon {
+  color: white;
+  background-color: #21252900;
+  border: transparent;
+}
+.icon:hover {
+  color: #000000;
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+  will-change: transform;
+}
+/*
+END of CALENDAR BUTTONS
+------------------------------------------------------------------------------------------------------------------------
+*/
+
+/*
+END of CALENDAR
+========================================================================================================================
+*/

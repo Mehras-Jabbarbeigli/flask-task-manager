@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK MANAGER</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/BG.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/nav.css')}}">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img class="mx-3" src="{{url_for('static',filename = 'images/logo1.png')}}" alt="" width="30" height="24" class="d-inline-block align-text-top">TASK MANAGER</a>
+
+        <!-- Wrapper for navigation links -->
+        <div class="navbar-links d-flex">
+            {% if current_user.is_authenticated %}
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+            {% endif %}
+        </div>
+
+        <!-- Admin link  -->
+        {% if is_admin() %}
+        <div class="admin-link">
+                <a class="nav-link admin-nav-link" href="{{ url_for('admin_users') }}">Admin</a>
+        </div>
+        {% endif %}
+        <!-- Search box -->
+        {% if current_user.is_authenticated %}
+        <form action="/search" method="GET" class="d-flex my-3">
+            <input class="form-control me-2" type="search" name="query" placeholder="Search by Title" aria-label="Search" autocomplete="off">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {% endif %}
+    </div>
+</nav>
+
+
+{% block body %}
+
+{% endblock body %}
