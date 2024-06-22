@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import secrets
 import bleach
+import re
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = secrets.token_hex(16)
@@ -51,12 +52,24 @@ class SignupForm(FlaskForm):
     username = StringField('Username', validators=[validators.DataRequired()])
     email = StringField('Email', validators=[validators.DataRequired(), validators.Email()])
     password = PasswordField('Password', validators=[
-        validators.DataRequired(),
-        validators.Length(min=8, message='Password must be at least 8 characters long'),
-        validators.EqualTo('confirm_password', message='Passwords must match')
+        validators.DataRequired(message='Password is required.'),
+        validators.Length(min=8, message='Password must be at least 8 characters long.'),
+        validators.EqualTo('confirm_password', message='Passwords must match.'),
+        validators.Regexp(
+            regex=r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+$',
+            message='Password must contain at least one uppercase letter, one lowercase letter, and one symbol.'
+        )
     ])
     confirm_password = PasswordField('Confirm Password', validators=[validators.DataRequired()])
     submit = SubmitField('Sign Up')
+
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise validators.ValidationError('Username already exists. Please choose a different username.')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise validators.ValidationError('Email already exists. Please choose a different email.')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -66,12 +79,12 @@ def login():
         password = form.password.data
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
-            login_user(user);
+            login_user(user)
             session['user_id'] = user.id
             flash('You have been logged in successfully', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Invalid username or password', 'error')
+            form.username.errors.append('Invalid username or password.')
     return render_template('login.html', form=form)
 
 def is_logged_in():
@@ -97,13 +110,15 @@ def signup():
         username = bleach.clean(form.username.data.strip())
         email = bleach.clean(form.email.data.strip())
         password = form.password.data
+
         existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
         if existing_user:
-            flash('Username or email already exists. Please choose a different username or email.', 'error')
-            return redirect(url_for('signup'))
-        if len(password) < 8:
-            flash('Password must be at least 8 characters long', 'error')
-            return redirect(url_for('signup'))
+            if existing_user.username == username:
+                form.username.errors.append('Username already exists. Please choose a different username.')
+            if existing_user.email == email:
+                form.email.errors.append('Email already exists. Please choose a different email.')
+            return render_template('signup.html', form=form)
+
         hashed_password = generate_password_hash(password)
         new_user = User(username=username, email=email, password=hashed_password)
         db.session.add(new_user)
@@ -184,8 +199,6 @@ def update_task_position():
     db.session.commit()
 
     return jsonify(message='Task position and dates updated successfully.')
-
-from flask import jsonify
 
 @app.route('/fetch_tasks')
 @login_required
@@ -312,19 +325,25 @@ def profile():
     all_tasks_count = Todo.query.filter_by(user_id=user.id).count()
     completed_tasks_count = Todo.query.filter_by(user_id=user.id, completed=True).count()
     incomplete_tasks_count = Todo.query.filter_by(user_id=user.id, completed=False).count()
+    errors = session.pop('errors', None)
+    success = session.pop('success', None)
     return render_template('profile.html', username=user.username,
                            all_tasks=all_tasks_count,
                            completed_tasks=completed_tasks_count,
-                           incomplete_tasks=incomplete_tasks_count)
+                           incomplete_tasks=incomplete_tasks_count,
+                           errors=errors,
+                           success=success)
 
 @app.route('/delete_account', methods=['POST'])
 @login_required
 def delete_account():
     user = current_user
-
     password = request.form.get('password')
+    errors = []
+
     if not password or not check_password_hash(user.password, password):
-        flash('Incorrect password. Account deletion failed.', 'error')
+        errors.append('Incorrect password. Account deletion failed.')
+        session['errors'] = errors
         return redirect(url_for('profile'))
 
     Todo.query.filter_by(user_id=user.id).delete()
@@ -333,7 +352,7 @@ def delete_account():
     db.session.commit()
 
     logout_user()
-    flash('Your account has been successfully deleted.', 'success')
+    session['success'] = ['Your account has been successfully deleted.']
     return redirect(url_for('login'))
 
 def check_current_password(user, password):
@@ -345,30 +364,31 @@ def change_password():
     current_password = request.form.get('current_password')
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
+    errors = []
 
     if not current_password or not new_password or not confirm_new_password:
-        flash('All fields are required', 'error')
-        return redirect(url_for('profile'))
+        errors.append('All fields are required')
+    else:
+        user = current_user
 
-    user = current_user
+        if not check_current_password(user, current_password):
+            errors.append('Incorrect current password')
+        if new_password != confirm_new_password:
+            errors.append('New passwords do not match')
+        if len(new_password) < 8:
+            errors.append('New password must be at least 8 characters long')
+        if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+$', new_password):
+            errors.append('New password must contain at least one uppercase letter, one lowercase letter, and one symbol')
 
-    if not check_current_password(user, current_password):
-        flash('Incorrect current password', 'error')
-        return redirect(url_for('profile'))
+        if not errors:
+            user.password = generate_password_hash(new_password)
+            db.session.commit()
+            session['success'] = ['Your password has been updated successfully']
+            return redirect(url_for('profile'))
 
-    if new_password != confirm_new_password:
-        flash('New passwords do not match', 'error')
-        return redirect(url_for('profile'))
-
-    if len(new_password) < 8:
-        flash('New password must be at least 8 characters long', 'error')
-        return redirect(url_for('profile'))
-
-    user.password = generate_password_hash(new_password)
-    db.session.commit()
-
-    flash('Your password has been updated successfully', 'success')
+    session['errors'] = errors
     return redirect(url_for('profile'))
+
 
 if __name__ == "__main__":
     with app.app_context():

@@ -1,4 +1,3 @@
-<!-- Profile Page -->
 {% extends 'base.html' %}
 
 {% block body %}
@@ -9,6 +8,24 @@
             <h2 class="card-label">Profile Page</h2>
             <div class="card">
                 <div class="card-body">
+                    <!-- Display all errors at the top of the form -->
+                    {% if errors %}
+                    <div class="error-message-box-profile form-errors">
+                        {% for error in errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Display success messages at the top of the form -->
+                    {% if success %}
+                    <div class="success-message-box form-success">
+                        {% for message in success %}
+                        <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
                     <form id="delete-account-form" action="{{ url_for('delete_account') }}" method="POST">
                         <div class="form-group mb-3">
                             <label for="username">Username</label>

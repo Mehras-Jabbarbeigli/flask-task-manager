@@ -10,23 +10,40 @@
             <form method="POST">
                 {{ form.hidden_tag() }}
                 <h2>SIGN UP</h2>
+
+                <!-- Display all errors at the top of the form -->
+                {% if form.errors %}
+                    <div class="error-message-box">
+                        {% for field, errors in form.errors.items() %}
+                            {% for error in errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <div class="inputbox">
                     <ion-icon name="person-outline"></ion-icon>
                     {{ form.username(class="form-control", placeholder="Username", required=True) }}
                 </div>
+
                 <div class="inputbox">
                     <ion-icon name="mail-outline"></ion-icon>
                     {{ form.email(class="form-control", placeholder="Email", required=True) }}
                 </div>
+
                 <div class="inputbox">
                     <ion-icon name="lock-closed-outline"></ion-icon>
                     {{ form.password(class="form-control", placeholder="Password", required=True) }}
                 </div>
+
                 <div class="inputbox">
                     <ion-icon name="lock-closed-outline"></ion-icon>
                     {{ form.confirm_password(class="form-control", placeholder="Confirm Password", required=True) }}
                 </div>
+
                 <button class="btn btn-dark">Sign Up</button>
+
                 <div class="register">
                     <p class="login-txt">Already have an account? <a href="{{ url_for('login') }}">Log In</a></p>
                 </div>
@@ -41,4 +58,5 @@
 <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+
 {% endblock body %}
